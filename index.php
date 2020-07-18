@@ -23,66 +23,85 @@
 </html>
 
 <?php
-if(isset($_POST['addtext'])){
-		echo "Size: " . ($_FILES["image"]["size"] / 1024) . " kB<br>";
-		$imagepath = $_FILES["image"]["tmp_name"];
+include 'textimg.php';
+include 'resizeimg.php';
+include 'flipimg.php';
+include 'frameimg.php';
+
+if(isset($_POST['addtext']) AND isset($_FILES['image'])){
+	
+	$path = $_FILES['image']['name'];
+	$ext = pathinfo($path, PATHINFO_EXTENSION);
 		
-		$font_path = "C:/wamp64/www/appjar/LittleLordFontleroyNF.TTF";
-		$textonimage = $_POST['textonimage'];
-		$fontSize = 250;
-		$x = 115;
-		$y = 185;
-		if($imagepath){
-			$img = imagecreatefromjpeg($imagepath);
-		} else{
-			echo "Please select image";
-		}
-		$color = imagecolorallocate($img, 255, 255, 255);
-		
-		imagettftext($img, $fontSize, 0, 75, 300, $color, $font_path, $textonimage);
-		imagejpeg($img, 'textimg.jpg');
-		echo '<center><img src="textimg.jpg" height="200" width="200"></center>';
-		imagedestroy($img);
-		
+	switch(strtolower($ext)){
+		case 'jpg';
+		case 'jpeg';
+			addtexttojpg();
+		break;
+		case 'png';
+			addtexttopng();
+		break;
+		case 'gif';
+			addtexttogif();
+		break;
+	}	
 }
 
-if(isset($_POST['resize'])){
-	$imagepath = $_FILES["image"]["tmp_name"];
-	$img = imagecreatefromjpeg($imagepath);
-
-	$img = imagescale($img, 500, 500);
-	imagejpeg($img, 'resize.jpg');
-	echo '<center><img src="newimage.jpg"></center>';
-	imagedestroy($img);
+if(isset($_POST['resize']) AND isset($_FILES['image'])){
+	
+	$path = $_FILES['image']['name'];
+	$ext = pathinfo($path, PATHINFO_EXTENSION);
+	
+	switch(strtolower($ext)){
+		case 'jpg';
+		case 'jpeg';
+			resizejpg();
+		break;
+		case 'png';
+			resizepng();
+		break;
+		case 'gif';
+			resizegif();
+		break;
+	}
 }
 
-if(isset($_POST['flip'])){
-	$imagepath = $_FILES["image"]["tmp_name"];
-	$img = imagecreatefromjpeg($imagepath);
-
-	imageflip($img, IMG_FLIP_HORIZONTAL);
-	imagejpeg($img, 'newimage.jpg');
-	echo '<img src="newimage.jpg">';
-	imagedestroy($img);
+if(isset($_POST['flip']) AND isset($_FILES['image'])){
+	
+	$path = $_FILES['image']['name'];
+	$ext = pathinfo($path, PATHINFO_EXTENSION);
+	
+	switch(strtolower($ext)){
+		case 'jpg';
+		case 'jpeg';
+			flipjpg();
+		break;
+		case 'png';
+			flippng();
+		break;
+		case 'gif';
+			flipgif();
+		break;
+	}
 }
 
 
 
-if(isset($_POST['addframe'])){
-	$imagepath = $_FILES["image"]["tmp_name"];
+if(isset($_POST['addframe']) AND isset($_FILES['image'])){
+	$path = $_FILES['image']['name'];
+	$ext = pathinfo($path, PATHINFO_EXTENSION);
 	
-	$img = imagecreatefrompng($imagepath);
-	$frame = imagecreatefrompng('frame.png');
-	$frame = imagescale($frame, 400, 400);
-	
-	imagealphablending($img, false);
-	imagesavealpha($img, true);
-	
-	imagecopymerge($img, $frame, 50, 90, 0, 0, 400, 400, 90);
-	imagejpeg($img, 'mergedimg.jpg');
-	echo '<center><img src="mergedimg.jpg" height="200" width="200"><br>';
-	echo '<a href="mergedimg.jpg" download="save.jpg">Download</a></center>';
-	imagedestroy($img);
-	imagedestroy($frame);
+	switch(strtolower($ext)){
+		case 'jpg';
+		case 'jpeg';
+			framejpg();
+		break;
+		case 'png';
+			framepng();
+		break;
+		case 'gif';
+			framegif();
+		break;
+	}
 }
 ?>
